@@ -17,6 +17,13 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = pkgs.stdenv.hostPlatform.isLinux;
+        message = "wlroots is only available on linux";
+      }
+    ];
+
     home.packages = with pkgs; [
       wdisplays
       wl-clipboard
@@ -31,6 +38,7 @@ in
           addons = {
             # FIXME: breaks 1password
             # electron-support = mkDefault enabled;
+            satty = mkDefault enabled;
             swappy = mkDefault enabled;
             swaync = mkDefault enabled;
             wlogout = mkDefault enabled;

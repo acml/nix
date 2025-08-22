@@ -21,12 +21,6 @@ in
     ];
 
     blacklistedKernelModules = [
-      "nouveau"
-      "nvidia"
-      "nvidia_drm"
-      "nvidia_modeset"
-      "nvidia_uvm"
-
       "eeepc_wmi"
     ];
 
@@ -50,92 +44,32 @@ in
     };
   };
 
-  # FIXME: server connection issues breaking whole system
-  # fileSystems = {
-  #   "/mnt/austinserver/appdata" = {
-  #     device = "austinserver.local:/mnt/user/appdata";
-  #     fsType = "nfs";
-  #     options = [
-  #       "noauto"
-  #       "x-systemd.automount"
-  #       "x-systemd.requires=network.target"
-  #       "x-systemd.mount-timeout=10"
-  #       "x-systemd.idle-timeout=1min"
-  #     ];
-  #   };
-  #
-  #   "/mnt/austinserver/data" = {
-  #     device = "austinserver.local:/mnt/user/data";
-  #     fsType = "nfs";
-  #     options = [
-  #       "noauto"
-  #       "x-systemd.automount"
-  #       "x-systemd.requires=network.target"
-  #       "x-systemd.mount-timeout=10"
-  #       "x-systemd.idle-timeout=1min"
-  #     ];
-  #   };
-  #
-  #   "/mnt/austinserver/backup" = {
-  #     device = "austinserver.local:/mnt/user/backup";
-  #     fsType = "nfs";
-  #     options = [
-  #       "noauto"
-  #       "x-systemd.automount"
-  #       "x-systemd.requires=network.target"
-  #       "x-systemd.mount-timeout=10"
-  #       "x-systemd.idle-timeout=1min"
-  #     ];
-  #   };
-  #
-  #   "/mnt/austinserver/isos" = {
-  #     device = "austinserver.local:/mnt/user/isos";
-  #     fsType = "nfs";
-  #     options = [
-  #       "noauto"
-  #       "x-systemd.automount"
-  #       "x-systemd.requires=network.target"
-  #       "x-systemd.mount-timeout=10"
-  #       "x-systemd.idle-timeout=1min"
-  #     ];
-  #   };
-  #
-  #   "/mnt/dropbox" = {
-  #     device = "austinserver.local:/mnt/disks/dropbox";
-  #     fsType = "nfs";
-  #     options = [
-  #       "noauto"
-  #       "x-systemd.automount"
-  #       "x-systemd.requires=network.target"
-  #       "x-systemd.mount-timeout=10"
-  #       "x-systemd.idle-timeout=1min"
-  #     ];
-  #   };
-  #
-  #   "/mnt/disks/googledrive" = {
-  #     device = "austinserver.local:/mnt/disks/googledrive";
-  #     fsType = "nfs";
-  #     options = [
-  #       "noauto"
-  #       "x-systemd.automount"
-  #       "x-systemd.requires=network.target"
-  #       "x-systemd.mount-timeout=10"
-  #       "x-systemd.idle-timeout=1min"
-  #     ];
-  #   };
-  #
-  #   "/mnt/disks/onedrive" = {
-  #     device = "austinserver.local:/mnt/disks/onedrive";
-  #     fsType = "nfs";
-  #     options = [
-  #       "noauto"
-  #       "x-systemd.automount"
-  #       "x-systemd.requires=network.target"
-  #       "x-systemd.mount-timeout=10"
-  #       "x-systemd.idle-timeout=1min"
-  #     ];
-  #   };
-  # };
+  fileSystems =
+    lib.mapAttrs'
+      (mountPoint: serverPath: {
+        name = mountPoint;
+        value = {
+          device = "austinserver.local:${serverPath}";
+          fsType = "nfs";
+          options = [
+            "noauto" # Don't mount at boot.
+            "x-systemd.automount" # Mount on first access.
+            "x-systemd.mount-timeout=10s" # Timeout for the mount operation.
+            "x-systemd.idle-timeout=1min" # Unmount after 1 minute of inactivity.
+            "x-systemd.requires=network-online.target" # Wait for an active connection.
+            "soft" # Prevent hangs if the server goes down.
+          ];
+        };
+      })
+      {
+        "/mnt/austinserver/appdata" = "/mnt/user/appdata";
+        "/mnt/austinserver/data" = "/mnt/user/data";
+        "/mnt/austinserver/backup" = "/mnt/user/backup";
+        "/mnt/austinserver/isos" = "/mnt/user/isos";
+        "/mnt/dropbox" = "/mnt/disks/dropbox";
+        "/mnt/disks/googledrive" = "/mnt/disks/googledrive";
+        "/mnt/disks/onedrive" = "/mnt/disks/onedrive";
+      };
 
   hardware = {
     display = {
@@ -164,7 +98,6 @@ in
           enableRocmSupport = true;
           enableNvtop = true;
         };
-        nvidia = enabled;
       };
       opengl = enabled;
 
@@ -196,19 +129,6 @@ in
 
       tpm = enabled;
       yubikey = enabled;
-    };
-
-    #   IOMMU Group 24:
-    # 	05:00.0 VGA compatible controller [0300]: NVIDIA Corporation GA102 [GeForce RTX 3080] [10de:2206] (rev a1)
-    # 	05:00.1 Audio device [0403]: NVIDIA Corporation GA102 High Definition Audio Controller [10de:1aef] (rev a1)
-    virtualisation.kvm = {
-      enable = true;
-      machineUnits = [ "machine-qemu\\x2d4\\x2dwin11\\x2dGPU.scope" ];
-      platform = "amd";
-      vfioIds = [
-        "10de:2206"
-        "10de:1aef"
-      ];
     };
   };
 

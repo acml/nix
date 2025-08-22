@@ -60,6 +60,7 @@ in
       packages = with pkgs; [
         grim
         hyprsysteminfo
+        hyprpicker
         pkgs.khanelinix.record_screen
         slurp
         kdePackages.xwaylandvideobridge
@@ -115,6 +116,7 @@ in
           launchers = {
             anyrun = enabled;
             sherlock = enabled;
+            walker = enabled;
           };
 
           screenlockers = {
@@ -143,6 +145,8 @@ in
         qt = enabled;
       };
     };
+
+    programs.hyprshot.enable = true;
 
     services.hyprpolkitagent = enabled;
 

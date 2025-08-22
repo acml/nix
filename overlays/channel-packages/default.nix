@@ -16,8 +16,9 @@ in
     claude-code
     yaziPlugins
 
-    # TODO: remove once makes it to unstable
-    sherlock-launcher
+    # TODO: remove after hits channel
+    thunderbird-unwrapped
+    thunderbird-latest
     ;
 
   # From nixpkgs-unstable
@@ -31,5 +32,7 @@ in
     firefox-devedition-unwrapped
     teams-for-linux
     telegram-desktop
+    # thunderbird-unwrapped
+    # thunderbird-latest
     ;
 }

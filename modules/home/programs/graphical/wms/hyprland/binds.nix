@@ -47,6 +47,7 @@ in
             launcherBinds = [
               "$mainMod, SPACE, exec, $($launcher)"
               "CTRL, SPACE, exec, $($launcher)"
+              "ALT, SPACE, exec, $($launcher-alt)"
             ];
 
             # App launch binds
@@ -83,22 +84,20 @@ in
 
             # Screenshot binds
             screenshotBinds = [
-              # File
-              ", Print, exec, $grimblast_active_file"
-              "SHIFT, Print, exec, $grimblast_area_file"
-              # "SHIFT_CTRL, S, exec, $grimblast_area_file"
-              "SUPER, Print, exec, $grimblast_screen_file"
+              # Screenshot to clipboard
+              ", Print, exec, $screenshot_active_clipboard"
+              "SHIFT, Print, exec, $screenshot_area_clipboard"
+              "SUPER, Print, exec, $screenshot_screen_clipboard"
 
-              # Area / Window
-              "ALT, Print, exec, $grimblast_active_swappy"
-              "ALT_CTRL, Print, exec, $grimblast_area_swappy"
-              "ALT_SUPER, Print, exec, $grimblast_screen_swappy"
-              # "SUPER_CTRL_SHIFT, S, exec, $grimblast_screen_swappy"
+              # Screenshot to file
+              "CTRL, Print, exec, $screenshot_active_file"
+              "CTRL_SHIFT, Print, exec, $screenshot_area_file"
+              "SUPER_CTRL, Print, exec, $screenshot_screen_file"
 
-              # Clipboard
-              "CTRL, Print, exec, $grimblast_active_clipboard"
-              "CTRL_SHIFT, Print, exec, $grimblast_area_clipboard"
-              "SUPER_CTRL, Print, exec, $grimblast_screen_clipboard"
+              # Screenshot annotation
+              "ALT, Print, exec, $screenshot_active_annotate"
+              "ALT_CTRL, Print, exec, $screenshot_area_annotate"
+              "ALT_SUPER, Print, exec, $screenshot_screen_annotate"
 
               # Screen recording
               "SUPER_CTRLALT, Print, exec, $screen-recorder screen"
