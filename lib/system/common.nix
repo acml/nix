@@ -74,6 +74,7 @@ in
           ++ [
             inputs.catppuccin.homeModules.catppuccin
             inputs.hypr-socket-watch.homeManagerModules.default
+            inputs.nix-doom-emacs-unstraightened.homeModule
             inputs.nix-index-database.homeModules.nix-index
             inputs.sops-nix.homeManagerModules.sops
           ]
