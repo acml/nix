@@ -84,6 +84,16 @@ in
           findNoDups = true;
         };
 
+        # profileExtra = # bash
+        #   ''
+        #     # Temporary fix for WSLg keyboard layout (only change the first line)
+        #     if [[ -f /proc/version ]] && grep -i Microsoft /proc/version >/dev/null 2>&1; then
+        #       if [ ! -f /mnt/wsl/state-wslg-config-initialized ]; then
+        #         GWSL_SYSTEM_CONFIG_COMMANDS='echo -e "\n[keyboard]\nkeymap_layout=us\nkeymap_variant=colemak\n" >> /home/wslg/.config/weston.ini && pkill -HUP weston && touch /mnt/wsl/state-wslg-config-initialized'
+        #         wsl.exe -d $WSL_DISTRO_NAME --user root --cd / --system bash -c ''${GWSL_SYSTEM_CONFIG_COMMANDS}
+        #       fi
+        #     fi
+        #   '';
         sessionVariables = {
           LC_ALL = "en_US.UTF-8";
           KEYTIMEOUT = 0;
